@@ -73,3 +73,39 @@ export const getHistory = (bedId) => {
         }, 700);
     });
 };
+
+// src/api/mockApi.js
+
+// ... (keep the existing login, getStatus, etc. functions)
+
+// Simulates a backend request to send an OTP
+export const sendOtp = (phone) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(`Mock API: Pretending to send OTP to ${phone}.`);
+      // In a real app, the backend would send an SMS here.
+      // We'll just resolve successfully.
+      resolve({ success: true });
+    }, 700);
+  });
+};
+
+// Simulates verifying the OTP
+export const verifyOtp = (otp) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      // We'll use a hardcoded OTP for the demo.
+      if (otp === "123456") {
+        console.log("Mock API: OTP verified successfully.");
+        // On success, we return the same user data as the normal login.
+        resolve({
+          user: { name: 'Nurse', role: 'nurse' },
+          token: 'mock-jwt-token-from-otp'
+        });
+      } else {
+        console.log("Mock API: Invalid OTP received.");
+        reject(new Error("Invalid OTP. Please try again."));
+      }
+    }, 700);
+  });
+};

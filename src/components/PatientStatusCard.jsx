@@ -1,0 +1,79 @@
+// src/components/PatientStatusCard.jsx
+import React from "react"
+import { Link } from "react-router-dom"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Progress } from "@/components/ui/progress"
+import { AlertTriangle, User, MapPin, Droplets, History } from "lucide-react"
+
+export function PatientStatusCard({ bed }) {
+  const { fluidBag, patient, bed_number, ward } = bed;
+
+  const ivFluidLevel = Math.round((fluidBag.current_level_ml / fluidBag.capacity_ml) * 100);
+
+  const lowThresholdPercent = (fluidBag.threshold_low / fluidBag.capacity_ml) * 100;
+  const highThresholdPercent = (fluidBag.threshold_high / fluidBag.capacity_ml) * 100;
+  const hasCriticalAlert = ivFluidLevel < lowThresholdPercent || ivFluidLevel > highThresholdPercent;
+  const alertMessage = `Fluid level is ${hasCriticalAlert ? 'critical' : 'normal'}`;
+
+  let progressColorClass = "bg-green-500";
+  if (ivFluidLevel < lowThresholdPercent) {
+    progressColorClass = "bg-red-500";
+  } else if (ivFluidLevel < lowThresholdPercent + 10) { // <-- This line is the fix
+    progressColorClass = "bg-yellow-500";
+  }
+
+  return (
+    <Card className="w-full max-w-md transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <User className="h-4 w-4 text-muted-foreground" />
+              <h3 className="font-semibold text-lg">{patient.name}</h3>
+            </div>
+            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <span className="font-medium">Bed:</span>
+                <span className="font-mono bg-secondary px-2 py-0.5 rounded">
+                  {bed_number}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <MapPin className="h-3 w-3" />
+                <span>{ward.name}</span>
+              </div>
+            </div>
+          </div>
+          {hasCriticalAlert && (
+            <Badge variant="destructive" className="flex items-center gap-1">
+              <AlertTriangle className="h-3 w-3" />
+              Critical
+            </Badge>
+          )}
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Droplets className="h-4 w-4 text-blue-500" />
+              <span className="text-sm font-medium">{fluidBag.type} Fluid Level</span>
+            </div>
+            <span className="text-sm font-mono">{ivFluidLevel}%</span>
+          </div>
+          <Progress value={ivFluidLevel} className="h-2" indicatorClassName={progressColorClass} />
+        </div>
+        
+        <Link to={`/patient/${bed.id}`} className="w-full">
+          <Button variant="outline" className="w-full flex items-center gap-2">
+            <History className="h-4 w-4" />
+            View Patient History
+          </Button>
+        </Link>
+      </CardContent>
+    </Card>
+  )
+}
