@@ -75,7 +75,32 @@ The application will be running on `http://localhost:5173`.
     * **Password:** `pass123`
 
 ---
+---
 
+## ⬆️ Pushing Changes to GitHub
+
+After you've made changes to the project, follow these steps to save them and upload them to your GitHub repository.
+
+1.  **Check the status of your changes** to see which files you've modified:
+    ```bash
+    git status
+    ```
+
+2.  **Stage all your changes** to be saved. The `.` adds all modified files.
+    ```bash
+    git add .
+    ```
+
+3.  **Commit your changes** with a descriptive message explaining what you did:
+    ```bash
+    git commit -m "feat: Add new patient data table"
+    ```
+    *(**Tip:** Good commit messages are helpful! Common prefixes include `feat:` for new features, `fix:` for bug fixes, and `chore:` for maintenance.)*
+
+4.  **Push your saved commits** to your remote repository on GitHub:
+    ```bash
+    git push
+    ```
 ## 📄 License
 
 This project is licensed under the MIT License.
