@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Use react-router-dom's Link
 import { login, sendOtp, verifyOtp } from '../api/mockApi';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FluidMonitorLogo } from '../components/FluidMonitorLogo'; // Import your new logo
 
 function Login({ onLoginSuccess }) {
   const navigate = useNavigate();
   
+  // We keep all the state and handlers from our previous login page
   const [view, setView] = useState('otp'); 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,9 +20,9 @@ function Login({ onLoginSuccess }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // --- Handlers (copied from our previous version) ---
   const handleAdminLogin = async (e) => {
     e.preventDefault();
-    console.log("Admin login clicked!");
     setLoading(true);
     setError('');
     try {
@@ -28,14 +31,11 @@ function Login({ onLoginSuccess }) {
       navigate('/dashboard');
     } catch (err) {
       setError('Invalid username or password.');
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
-    console.log("Send OTP button clicked!");
     setLoading(true);
     setError('');
     try {
@@ -43,14 +43,11 @@ function Login({ onLoginSuccess }) {
       setOtpSent(true);
     } catch (err) {
       setError('Failed to send OTP.');
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
   
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
-    console.log("Verify OTP clicked!");
     setLoading(true);
     setError('');
     try {
@@ -59,9 +56,7 @@ function Login({ onLoginSuccess }) {
       navigate('/dashboard');
     } catch (err) {
       setError('Invalid OTP.');
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
   const switchView = (newView) => {
@@ -70,63 +65,78 @@ function Login({ onLoginSuccess }) {
   };
 
   return (
-    <div className="w-full min-h-screen lg:grid lg:grid-cols-2">
-      <div className="flex items-center justify-center py-12">
-        <div className="mx-auto grid w-[350px] gap-6">
-          
-          {view === 'otp' ? (
-            <Card>
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">User Login</CardTitle>
-                <CardDescription>Enter your phone number to receive an OTP.</CardDescription>
-              </CardHeader>
-              {/* We now wrap CardContent in a <form> tag */}
-              <form onSubmit={!otpSent ? handleSendOtp : handleVerifyOtp}>
-                <CardContent className="space-y-4">
-                  {!otpSent ? (
-                    <div className="space-y-4">
-                      <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone Number" required />
-                      <Button type="submit" className="w-full" disabled={loading}>{loading ? 'Sending...' : 'Send OTP'}</Button>
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <Card className="shadow-xl border-0 bg-card">
+          <CardHeader className="space-y-6 pb-8">
+            <div className="flex justify-center">
+              <FluidMonitorLogo />
+            </div>
+            <div className="text-center space-y-2">
+              <CardTitle className="text-2xl font-bold text-balance">
+                {view === 'admin' ? 'Admin Sign In' : 'Welcome'}
+              </CardTitle>
+              <CardDescription className="text-muted-foreground">
+                {view === 'admin' ? 'Sign in to the healthcare dashboard' : 'Enter your phone number to continue'}
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {view === 'otp' ? (
+              // --- OTP Form ---
+              <form onSubmit={!otpSent ? handleSendOtp : handleVerifyOtp} className="space-y-4">
+                {!otpSent ? (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
                     </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <p className="text-sm text-center text-muted-foreground">Enter the code sent to {phone}. (Hint: 123456)</p>
-                      <Input value={otp} onChange={(e) => setOtp(e.target.value)} placeholder="6-digit OTP" required />
-                      <Button type="submit" className="w-full" disabled={loading}>{loading ? 'Verifying...' : 'Verify & Login'}</Button>
+                    <Button type="submit" className="w-full h-11 font-medium" disabled={loading}>
+                      {loading ? 'Sending...' : 'Send OTP'}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm text-center text-muted-foreground">Enter the code sent to {phone}. (Hint: 123456)</p>
+                    <div className="space-y-2">
+                      <Label htmlFor="otp">One-Time Password</Label>
+                      <Input id="otp" value={otp} onChange={(e) => setOtp(e.target.value)} required />
                     </div>
-                  )}
-                  {error && <p className="text-sm text-destructive text-center">{error}</p>}
-                  <Button variant="link" type="button" className="w-full" onClick={() => switchView('admin')}>
+                    <Button type="submit" className="w-full h-11 font-medium" disabled={loading}>
+                      {loading ? 'Verifying...' : 'Verify & Login'}
+                    </Button>
+                  </>
+                )}
+                <div className="text-center">
+                  <Button type="button" variant="link" onClick={() => switchView('admin')} className="text-sm font-medium">
                     Admin Login
                   </Button>
-                </CardContent>
+                </div>
               </form>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">Admin Login</CardTitle>
-                <CardDescription>Enter your administrator credentials below.</CardDescription>
-              </CardHeader>
-              {/* We do the same for the Admin form */}
-              <form onSubmit={handleAdminLogin}>
-                <CardContent className="space-y-4">
-                  <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username (e.g., nurse)" required />
-                  <Input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password (pass123)" required />                  
-                  {error && <p className="text-sm text-destructive text-center">{error}</p>}
-                  <Button type="submit" className="w-full" disabled={loading}>{loading ? 'Logging in...' : 'Login'}</Button>
-                  <Button variant="link" type="button" className="w-full" onClick={() => switchView('otp')}>
+            ) : (
+              // --- Admin Form ---
+              <form onSubmit={handleAdminLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="username">Username</Label>
+                  <Input id="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="nurse" required />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="pass123" required />
+                </div>
+                <Button type="submit" className="w-full h-11 font-medium" disabled={loading}>
+                  {loading ? 'Signing in...' : 'Sign In'}
+                </Button>
+                <div className="text-center">
+                  <Button type="button" variant="link" onClick={() => switchView('otp')} className="text-sm font-medium">
                     User OTP Login
                   </Button>
-                </CardContent>
+                </div>
               </form>
-            </Card>
-          )}
-
-        </div>
-      </div>
-      <div className="hidden bg-muted lg:block">
-        <div className="h-full w-full bg-gray-200" />
+            )}
+            {error && <p className="text-center text-sm text-destructive mt-4">{error}</p>}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
