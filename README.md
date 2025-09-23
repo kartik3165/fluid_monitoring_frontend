@@ -75,8 +75,6 @@ The application will be running on `http://localhost:5173`.
     * **Password:** `pass123`
 
 ---
----
-
 ## ⬆️ Pushing Changes to GitHub
 
 After you've made changes to the project, follow these steps to save them and upload them to your GitHub repository.
@@ -101,6 +99,8 @@ After you've made changes to the project, follow these steps to save them and up
     ```bash
     git push
     ```
+    ---
+    
 ## 📄 License
 
 This project is licensed under the MIT License.
