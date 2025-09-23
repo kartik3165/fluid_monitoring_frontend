@@ -2,8 +2,6 @@
 
 A responsive web application built with **React.js** and **Vite** for monitoring patient fluid levels in a hospital setting. This dashboard provides a clean, modern UI with real-time updates, color-coded status indicators, and historical data visualization to help healthcare professionals make informed decisions.
 
-![Dashboard Screenshot](https://i.imgur.com/your-screenshot-url.png)
-*Replace the link above with a URL to a screenshot of your finished dashboard.*
 
 ---
 
