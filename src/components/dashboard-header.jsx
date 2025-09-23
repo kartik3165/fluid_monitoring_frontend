@@ -1,18 +1,15 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // 1. Import the hook
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, Menu } from "lucide-react";
-import { Settings, User, LogOut } from 'lucide-react'; // Also ensure these are imported
+import { Search, Bell, User, Settings, LogOut, Menu } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export function DashboardHeader({ user, onLogout, onMobileMenuToggle }) {
-  const navigate = useNavigate(); // 2. Initialize the hook
-
+  const navigate = useNavigate();
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-       <Button size="icon" variant="outline" className="sm:hidden" onClick={onMobileMenuToggle}>
+      <Button size="icon" variant="outline" className="sm:hidden" onClick={onMobileMenuToggle}>
         <Menu className="h-5 w-5" />
         <span className="sr-only">Toggle Menu</span>
       </Button>
@@ -32,7 +29,6 @@ export function DashboardHeader({ user, onLogout, onMobileMenuToggle }) {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>My Account ({user.name})</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {/* 3. Add the onClick handler to navigate */}
           <DropdownMenuItem onClick={() => navigate('/settings')}>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
@@ -47,3 +43,4 @@ export function DashboardHeader({ user, onLogout, onMobileMenuToggle }) {
     </header>
   );
 }
+export default DashboardHeader;

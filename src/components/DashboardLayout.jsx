@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { DashboardSidebar } from "./DashboardSidebar";
-import { DashboardHeader } from "./DashboardHeader";
+import { DashboardSidebar } from "./dashboard-sidebar";
+import { DashboardHeader } from "./dashboard-header";
 
 export function DashboardLayout({ user, onLogout, children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
